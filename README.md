@@ -9,3 +9,5 @@
 - https://secure.meetup.com/meetup_api
 - https://github.com/jkutianski/meetup-api/wiki
 - https://github.com/jkutianski/meetup-api/wiki/API-Methods-List
+- https://www.npmjs.com/package/cors
+- https://expressjs.com/en/guide/routing.html
