@@ -3,9 +3,13 @@ const configuration = require("./configuration");
 const express = require("express");
 const app = express();
 
+const Promise = require("bluebird");
+
 const meetup = require("meetup-api")({
   key: configuration.MEETUP_API_KEY
 });
+
+Promise.promisifyAll(Object.getPrototypeOf(meetup));
 
 // reactnyc,vueJsNYC,NYC-JavaScript-Flatiron,NY-JavaScript,AngularNYC,QueensJS,JS-NY
 
@@ -30,22 +34,32 @@ const meetup = require("meetup-api")({
 */
 
 app.get("/", (req, res) => res.send("Hi3!!!"));
-app.get("/groups/:group_urlname", (req, res, next) => {
+app.get("/groups/:group_urlname", async (req, res, next) => {
   const { group_urlname } = req.params;
   console.log(group_urlname);
-  // res.send(group_urlname);
 
-  meetup.getGroups({ group_urlname }, function(err, resp) {
-    console.log(err, resp);
+  const groups = await meetup.getGroupsAsync({ group_urlname });
+  // console.log(groups);
+  // res.send(groups);
 
-    const result = resp.results.reduce((acc, group) => {
-      acc[group.urlname] = group;
-      return acc;
-    }, {});
+  const result = groups.results.reduce((acc, group) => {
+    acc[group.urlname] = group;
+    return acc;
+  }, {});
 
-    // res.send(resp);
-    res.send(result);
-  });
+  res.send(result);
+
+  // meetup.getGroups({ group_urlname }, function(err, resp) {
+  //   console.log(err, resp);
+
+  //   const result = resp.results.reduce((acc, group) => {
+  //     acc[group.urlname] = group;
+  //     return acc;
+  //   }, {});
+
+  //   // res.send(resp);
+  //   res.send(result);
+  // });
 
   // next();
 });
