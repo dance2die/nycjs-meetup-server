@@ -9,6 +9,26 @@ const meetup = require("meetup-api")({
 
 // reactnyc,vueJsNYC,NYC-JavaScript-Flatiron,NY-JavaScript,AngularNYC,QueensJS,JS-NY
 
+// need to construct a data structure like following.
+/*
+  groups: {
+    url_name: {
+      // result from "meetup.getGroups"
+      group_detail: {},
+      // result from "meetup.getEvents"
+      events: []
+    },
+    url_name: {
+      // result from "meetup.getGroups"
+      group_detail: {},
+      // result from "meetup.getEvents"
+      events: []
+    },
+    ...
+  }
+
+*/
+
 app.get("/", (req, res) => res.send("Hi3!!!"));
 app.get("/groups/:group_urlname", (req, res, next) => {
   const { group_urlname } = req.params;
