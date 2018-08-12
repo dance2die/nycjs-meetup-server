@@ -14,13 +14,13 @@ const meetup = require("meetup-api")({
   groups: {
     url_name: {
       // result from "meetup.getGroups"
-      group_detail: {},
+      group: {},
       // result from "meetup.getEvents"
       events: []
     },
     url_name: {
       // result from "meetup.getGroups"
-      group_detail: {},
+      group: {},
       // result from "meetup.getEvents"
       events: []
     },
@@ -37,7 +37,14 @@ app.get("/groups/:group_urlname", (req, res, next) => {
 
   meetup.getGroups({ group_urlname }, function(err, resp) {
     console.log(err, resp);
-    res.send(resp);
+
+    const result = resp.results.reduce((acc, group) => {
+      acc[group.urlname] = group;
+      return acc;
+    }, {});
+
+    // res.send(resp);
+    res.send(result);
   });
 
   // next();
