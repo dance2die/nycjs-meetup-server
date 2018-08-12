@@ -1,7 +1,10 @@
 require("dotenv").config();
 const configuration = require("./configuration");
+const compression = require("compression");
 const express = require("express");
 const app = express();
+
+app.use(compression());
 
 const Promise = require("bluebird");
 
@@ -38,30 +41,21 @@ app.get("/groups/:group_urlname", async (req, res, next) => {
   const { group_urlname } = req.params;
   console.log(group_urlname);
 
-  const groups = await meetup.getGroupsAsync({ group_urlname });
-  // console.log(groups);
-  // res.send(groups);
+  try {
+    const groupsResponse = await meetup.getGroupsAsync({ group_urlname });
+    const groupIds = groupsResponse.results.map(_ => _.id);
 
-  const result = groups.results.reduce((acc, group) => {
-    acc[group.urlname] = group;
-    return acc;
-  }, {});
+    const events = await meetup.getEventsAsync({ group_id: groupIds });
+    console.log(events);
+    res.send(events);
+  } catch (e) {
+    res.status(400).send(`Error while getting Group and Event details = ${e}`);
+  }
 
-  res.send(result);
-
-  // meetup.getGroups({ group_urlname }, function(err, resp) {
-  //   console.log(err, resp);
-
-  //   const result = resp.results.reduce((acc, group) => {
-  //     acc[group.urlname] = group;
-  //     return acc;
-  //   }, {});
-
-  //   // res.send(resp);
-  //   res.send(result);
-  // });
-
-  // next();
+  // const groups = groupsResponse.results.reduce((acc, group) => {
+  //   acc[group.urlname] = group;
+  //   return acc;
+  // }, {});
 });
 app.listen(3001, () => console.log("listening on port 3001"));
 
