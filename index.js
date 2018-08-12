@@ -18,7 +18,7 @@ Promise.promisifyAll(Object.getPrototypeOf(meetup));
 
 // need to construct a data structure like following.
 /*
-  groups: {
+  data: {
     url_name: {
       // result from "meetup.getGroups"
       group: {},
@@ -42,17 +42,21 @@ app.get("/groups/:group_urlname", async (req, res, next) => {
   console.log(group_urlname);
 
   try {
-    const groupsResponse = await meetup.getGroupsAsync({ group_urlname });
-    const groupIds = groupsResponse.results.map(_ => _.id);
+    const { results: groups } = await meetup.getGroupsAsync({
+      group_urlname
+    });
+    const groupIds = groups.map(_ => _.id);
 
-    const events = await meetup.getEventsAsync({ group_id: groupIds });
+    const { results: events } = await meetup.getEventsAsync({
+      group_id: groupIds
+    });
     console.log(events);
     res.send(events);
   } catch (e) {
     res.status(400).send(`Error while getting Group and Event details = ${e}`);
   }
 
-  // const groups = groupsResponse.results.reduce((acc, group) => {
+  // const groups = groupResults.reduce((acc, group) => {
   //   acc[group.urlname] = group;
   //   return acc;
   // }, {});
