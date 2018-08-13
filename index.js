@@ -42,7 +42,9 @@ app.get("/groups/:group_urlname", async (req, res, next) => {
   }
 });
 
-app.listen(3001, () => console.log("listening on port 3001"));
+app.listen(configuration.PORT, () =>
+  console.log(`listening on port ${configuration.PORT}`)
+);
 
 // const groupNames = [
 //   "reactnyc",
