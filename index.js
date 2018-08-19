@@ -4,6 +4,40 @@ const compression = require("compression");
 const express = require("express");
 const app = express();
 const Promise = require("bluebird");
+const cors = require("cors");
+
+// https://m4xq07441x.codesandbox.io
+// https://arjunphp.com/enable-cors-express-js/
+var allowedOrigins = ["https://m4xq07441x.codesandbox.io"];
+
+app.use(
+  cors({
+    // some legacy browsers (IE11, various SmartTVs) choke on 204
+    optionsSuccessStatus: 200,
+    origin: function(origin, callback) {
+      // allow requests with no origin
+
+      // (like mobile apps or curl requests)
+
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          "The CORS policy for this site does not " +
+          "allow access from the specified Origin.";
+
+        return callback(new Error(msg), false);
+      }
+
+      return callback(null, true);
+    }
+  })
+);
+// const corsOptions = {
+//   origin: "*",
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+// app.use(cors(corsOptions));
 
 const meetup = require("meetup-api")({
   key: configuration.MEETUP_API_KEY
