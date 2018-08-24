@@ -8,7 +8,9 @@ const cors = require("cors");
 
 // https://m4xq07441x.codesandbox.io
 // https://arjunphp.com/enable-cors-express-js/
-var allowedOrigins = ["https://m4xq07441x.codesandbox.io"];
+// var allowedOrigins = ["https://m4xq07441x.codesandbox.io"];
+
+let allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
 app.use(
   cors({
