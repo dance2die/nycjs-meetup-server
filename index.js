@@ -10,7 +10,12 @@ const cors = require("cors");
 // https://arjunphp.com/enable-cors-express-js/
 // var allowedOrigins = ["https://m4xq07441x.codesandbox.io"];
 
-let allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
+console.log(`process.env.NODE_ENV`, process.env.NODE_ENV);
+
+let allowedOrigins =
+  process.env.NODE_ENV === "development"
+    ? "*"
+    : process.env.ALLOWED_ORIGINS.split(",");
 
 app.use(
   cors({
@@ -35,16 +40,12 @@ app.use(
     }
   })
 );
-// const corsOptions = {
-//   origin: "*",
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-// app.use(cors(corsOptions));
 
 const meetup = require("meetup-api")({
   key: configuration.MEETUP_API_KEY
 });
 
+app.use(express.static("public"));
 app.use(compression());
 
 Promise.promisifyAll(Object.getPrototypeOf(meetup));
